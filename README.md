@@ -17,12 +17,12 @@ curl -fsSL https://raw.githubusercontent.com/akthanon/monitoreo_sismico/refs/hea
 
 ### Conexiones MPU6050 ↔ Raspberry Pi
 
-| MPU6050 Pin | Raspberry Pi Pin      |
-| ----------- | --------------------- |
-| VCC         | 3.3V o 5V (Pin 1 o 2) |
-| GND         | GND (Pin 6)           |
-| SDA         | GPIO 2 (Pin 3)        |
-| SCL         | GPIO 3 (Pin 5)        |
+| MPU6050 Pin | Raspberry Pi Pin        |
+| ----------- | ----------------------- |
+| VCC         | 3.3V o 5V (Pin 1 o 2/4) |
+| GND         | GND (Pin 6)             |
+| SDA         | GPIO 2 (Pin 3)          |
+| SCL         | GPIO 3 (Pin 5)          |
 
 ### Header J8 (Distribución de pines)
 
