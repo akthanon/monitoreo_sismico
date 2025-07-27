@@ -111,4 +111,4 @@ sudo orangepi-config
 
 ---
 
-📎 Más detalles e instrucciones en la [Documentación de Orange Pi]([https://github.com/akthanon/monitoreo_sismico](http://www.orangepi.org/orangepiwiki/index.php/Orange_Pi_Zero_3))
+📎 Más detalles e instrucciones en la [Documentación de Orange Pi](http://www.orangepi.org/orangepiwiki/index.php/Orange_Pi_Zero_3)
