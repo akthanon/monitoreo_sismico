@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "⚙️ Instalando programas necesarios..."
-sudo apt install python3-smbus i2c-tools -y
+sudo apt install python3-flask python3-smbus i2c-tools -y
 
 set -e
 
