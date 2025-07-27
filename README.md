@@ -53,6 +53,14 @@ curl -fsSL https://raw.githubusercontent.com/akthanon/monitoreo_sismico/refs/hea
 ---
 
 ## 🍊 Orange Pi Zero 3
+# Importante:
+
+Debido a que Orange Pi Zero utiliza la interfáz i2c3 en lugar de la i2c1 se tiene que editar el codigo
+
+Editar *sensor.py* 
+```bash
+bus = smbus.SMBus(1) > bus = smbus.SMBus(3)
+```
 
 ### Habilitar I2C-3
 
@@ -63,6 +71,8 @@ sudo orangepi-config
 > Hardware
 > ph-i2c3
 ```
+
+
 
 ### Conexiones MPU6050 ↔ Orange Pi
 
