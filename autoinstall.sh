@@ -35,7 +35,6 @@ After=network.target
 WorkingDirectory=$INSTALL_DIR
 ExecStart=$PYTHON_EXEC app.py
 Restart=on-failure
-User=$USER
 Environment=PYTHONUNBUFFERED=1
 
 [Install]
