@@ -9,22 +9,6 @@ PYTHON_EXEC="$(which python3)"
 
 echo "📦 Instalando servicio de monitoreo sísmico en $INSTALL_DIR..."
 
-# Instalar Python si no existe
-if [ -z "$PYTHON_EXEC" ]; then
-  echo "❌ No se encontró Python 3. Instalando..."
-  sudo apt update
-  sudo apt install -y python3 python3-pip
-  PYTHON_EXEC="$(which python3)"
-fi
-
-# Instalar Flask si no está
-if ! "$PYTHON_EXEC" -c "import flask" &> /dev/null; then
-  echo "📦 Flask no está instalado. Instalando con pip..."
-  pip3 install --user flask
-else
-  echo "✅ Flask ya está instalado."
-fi
-
 # Clonar el repositorio
 if [ -d "$INSTALL_DIR" ]; then
   echo "📁 Ya existe $INSTALL_DIR. Eliminando..."
