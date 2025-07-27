@@ -53,4 +53,4 @@ sudo systemctl enable "$SERVICE_NAME"
 sudo systemctl restart "$SERVICE_NAME"
 
 echo "✅ Servicio '$SERVICE_NAME' instalado y corriendo desde $INSTALL_DIR"
-echo "🌐 Accede desde http://<IP>:80"
+echo "🌐 Accede desde tu IP http://<IP>:5770"
