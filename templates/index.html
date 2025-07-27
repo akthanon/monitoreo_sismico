@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Monitoreo Sismográfico Culiacán</title>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 1rem;
+      background: #fff;
+      color: #222;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .graph-container {
+      height: 200px;
+      margin-bottom: 2rem;
+      border: 1px solid #ddd;
+      padding: 0.5rem;
+      border-radius: 6px;
+      box-shadow: 0 0 8px #eee;
+      background: #f9f9f9;
+    }
+  </style>
+</head>
+
+  <div style="text-align: center; margin-bottom: 2rem;">
+    <a href="/logs" download class="descargar-btn">📥 Descargar datos CSV</a>
+  </div>
+
+  <style>
+    .descargar-btn {
+      display: inline-block;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      color: white;
+      background-color: #007BFF;
+      border: none;
+      border-radius: 6px;
+      text-decoration: none;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .descargar-btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+
+
+<body>
+  <h1>Monitoreo Sismográfico Culiacán</h1>
+
+  <div id="graphX" class="graph-container"></div>
+  <div id="graphY" class="graph-container"></div>
+  <div id="graphZ" class="graph-container"></div>
+  <div id="graphMag" class="graph-container"></div>
+
+<script>
+  const buffers = { t: [], Ax: [], Ay: [], Az: [], Mag: [] };
+  const MAX_WINDOW_MS = 60000;
+  const INTERVAL_MS = 100;
+  const startTime = new Date(); // Tiempo al cargar la página
+
+  function pruneOld(now) {
+    while (buffers.t.length && (now - buffers.t[0]) > MAX_WINDOW_MS) {
+      buffers.t.shift();
+      buffers.Ax.shift();
+      buffers.Ay.shift();
+      buffers.Az.shift();
+      buffers.Mag.shift();
+    }
+  }
+
+  function updatePlot(id, x, y, title, label) {
+    Plotly.react(id, [{
+      x: x,
+      y: y,
+      mode: 'lines',
+      line: { width: 2 },
+      name: label
+    }], {
+      margin: { l: 40, r: 10, t: 25, b: 30 },
+      title: title,
+      xaxis: {
+        type: 'date',
+        title: 'Tiempo',
+        showgrid: false
+      },
+      yaxis: {
+        title: label,
+        showgrid: true,
+        gridcolor: '#ccc',
+        zeroline: false
+      },
+      paper_bgcolor: '#fff',
+      plot_bgcolor: '#fff'
+    });
+  }
+
+  async function poll() {
+    try {
+      const res = await fetch('/data');
+      const json = await res.json();
+
+      const cleanedTimestamp = json.timestamp.replace(/(\.\d{3})\d+/, '$1');
+      const now = new Date(cleanedTimestamp);
+      if (isNaN(now.getTime())) {
+        console.warn("Fecha inválida:", json.timestamp);
+        return;
+      }
+
+      // Filtrar datos anteriores al tiempo de carga
+      if (now < startTime) return;
+
+      buffers.t.push(now);
+      buffers.Ax.push(json.Ax);
+      buffers.Ay.push(json.Ay);
+      buffers.Az.push(json.Az);
+      buffers.Mag.push(Math.sqrt(json.Ax**2 + json.Ay**2 + json.Az**2));
+
+      pruneOld(now);
+
+      const fmtTime = buffers.t.map(d => d.toISOString());
+      updatePlot('graphX', fmtTime, buffers.Ax, 'Aceleración X', 'Ax (g)');
+      updatePlot('graphY', fmtTime, buffers.Ay, 'Aceleración Y', 'Ay (g)');
+      updatePlot('graphZ', fmtTime, buffers.Az, 'Aceleración Z', 'Az (g)');
+      updatePlot('graphMag', fmtTime, buffers.Mag, 'Magnitud', '√(Ax²+Ay²+Az²)');
+
+    } catch (e) {
+      console.error('Error en poll():', e);
+    }
+  }
+
+  setInterval(poll, INTERVAL_MS);
+</script>
+
+
+</body>
+</html>
+
+
+
