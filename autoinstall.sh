@@ -25,9 +25,6 @@ git clone "$REPO_URL" "$INSTALL_DIR"
 mkdir -p "$INSTALL_DIR/logs"
 touch "$INSTALL_DIR/logs/data.csv"
 
-echo "⚙️ Instalando programas necesarios..."
-sudo apt install python3-smbus -y i2c-tools -y
-
 #instalar requerimentos
 pip install -r "$INSTALL_DIR/requirements.txt"
 
