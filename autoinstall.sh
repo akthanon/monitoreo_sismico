@@ -26,7 +26,8 @@ touch "$INSTALL_DIR/logs/data.csv"
 pip install -r "$INSTALL_DIR/requirements.txt"
 
 echo "⚙️ Instalando programas necesarios..."
-sudo apt install python3-smbus i2c-tools -y
+sudo apt install python3-smbus -y
+sudo apt install i2c-tools -y
 
 # Crear archivo de servicio
 SERVICE_FILE="/etc/systemd/system/$SERVICE_NAME.service"
