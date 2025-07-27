@@ -4,11 +4,12 @@ set -e
 
 SERVICE_NAME="monitoreo-sismico"
 INSTALL_DIR="$HOME/monitoreo_sismico"
+REPO_URL="https://github.com/akthanon/monitoreo_sismico.git"
 PYTHON_EXEC="$(which python3)"
 
 echo "📦 Instalando servicio de monitoreo sísmico en $INSTALL_DIR..."
 
-# Verificar Python y Flask
+# Instalar Python si no existe
 if [ -z "$PYTHON_EXEC" ]; then
   echo "❌ No se encontró Python 3. Instalando..."
   sudo apt update
@@ -16,12 +17,22 @@ if [ -z "$PYTHON_EXEC" ]; then
   PYTHON_EXEC="$(which python3)"
 fi
 
+# Instalar Flask si no está
 if ! "$PYTHON_EXEC" -c "import flask" &> /dev/null; then
-  echo "📦 Flask no está instalado. Instalando..."
+  echo "📦 Flask no está instalado. Instalando con pip..."
   pip3 install --user flask
 else
   echo "✅ Flask ya está instalado."
 fi
+
+# Clonar el repositorio
+if [ -d "$INSTALL_DIR" ]; then
+  echo "📁 Ya existe $INSTALL_DIR. Eliminando..."
+  rm -rf "$INSTALL_DIR"
+fi
+
+echo "🔻 Clonando desde $REPO_URL..."
+git clone "$REPO_URL" "$INSTALL_DIR"
 
 # Crear carpeta logs y archivo vacío
 mkdir -p "$INSTALL_DIR/logs"
@@ -33,7 +44,7 @@ echo "⚙️ Creando archivo de servicio en $SERVICE_FILE..."
 
 sudo tee "$SERVICE_FILE" > /dev/null <<EOF
 [Unit]
-Description=Servidor Flask de Monitoreo Sismográfico (usuario)
+Description=Servidor Flask de Monitoreo Sismográfico
 After=network.target
 
 [Service]
@@ -47,12 +58,12 @@ Environment=PYTHONUNBUFFERED=1
 WantedBy=multi-user.target
 EOF
 
-# Recargar y habilitar el servicio
+# Activar servicio
 echo "🔄 Activando servicio..."
 sudo systemctl daemon-reexec
 sudo systemctl daemon-reload
 sudo systemctl enable "$SERVICE_NAME"
 sudo systemctl restart "$SERVICE_NAME"
 
-echo "✅ Servicio '$SERVICE_NAME' está corriendo desde $INSTALL_DIR"
+echo "✅ Servicio '$SERVICE_NAME' instalado y corriendo desde $INSTALL_DIR"
 echo "🌐 Accede desde http://<IP>:80"
