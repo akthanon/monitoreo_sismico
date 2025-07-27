@@ -22,6 +22,9 @@ git clone "$REPO_URL" "$INSTALL_DIR"
 mkdir -p "$INSTALL_DIR/logs"
 touch "$INSTALL_DIR/logs/data.csv"
 
+#instalar requerimentos
+pip install -r "$INSTALL_DIR/requirements.txt"
+
 # Crear archivo de servicio
 SERVICE_FILE="/etc/systemd/system/$SERVICE_NAME.service"
 echo "⚙️ Creando archivo de servicio en $SERVICE_FILE..."
